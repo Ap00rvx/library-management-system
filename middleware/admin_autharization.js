@@ -1,20 +1,27 @@
 const jsonwebtoken = require('jsonwebtoken');
-const User = require('../model//user_model'); 
+const User = require('../model/user_model'); 
 
-var checkAuthToken = async (req,res,next )=> {
+
+const checkAdmin = async (req,res,next) => {
     const token = req.header("x-auth-token");
- if (!token){
+   if (!token){
         res.send({"status":"failed","message":"Token not found"}); 
-    }else{
-        try {
+    }
+    try {
             const userId = jsonwebtoken.verify(token, process.env.SECRET_KEY);
             req.user = await User.findById(userId['userID']).select('-password');
-            next(); 
+            if (req.user.role == 'admin'){
+                next(); 
+            }   
+            else{
+                res.status(403).send({"status":"failed",message:"You are not authorized"}); 
+            }
         }catch(err){
             res.status(403).send({"status":"failed","message":"Unauthorized sender"}); 
         }
-    }
+
     
-   
+    
 }
-module.exports= checkAuthToken;
+
+module.exports = checkAdmin ; 

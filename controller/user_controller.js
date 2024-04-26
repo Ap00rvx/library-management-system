@@ -120,7 +120,13 @@ class UserContoller {
         if (id)
         {
             const user  = await User.findById(id);
-            res.send({status:"success","user":user});  
+            if(user.role == 'admin'){
+                const admindata = await User.findById(id).select("-password -uniqueId");  
+                res.send({status:"success","user":admindata});
+            }
+            else{
+            res.send({status:"success","user":user});
+            }  
         } 
         else{
             res.seng({"status":"failed","message":"User not logged in"});
