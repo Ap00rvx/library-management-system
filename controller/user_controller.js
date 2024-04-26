@@ -99,6 +99,24 @@ class UserContoller {
         }
 
     }
+    static changePassword = async (req,res) => {
+        const {password ,cpassword }= req.body ;
+        // const user =req.user ; 
+        if (password && cpassword){
+            if(password === cpassword){
+                const salt = await bcrypt.genSalt(10); 
+                const newPassword = await bcrypt.hash(password,salt); 
+                await User.findByIdAndUpdate(req.user._id, {password:newPassword}); 
+                res.send({status :"success","message":"Password updated"}); 
+            }else{
+                res.send({"status":"failed",message:"Password doesn't match"}); 
+            }
+
+        }else {
+            res.send({"status":"failed",message:"All fields are required"})
+        } 
+        
+    }
     static faculties = async (req,res) => {
         const faculty = await User.find({role:'faculty'}); 
         res.send({"status":"success","faculty":faculty});
