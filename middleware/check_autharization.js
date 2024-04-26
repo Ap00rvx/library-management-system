@@ -8,9 +8,7 @@ var checkAuthToken = async (req,res,next )=> {
         try {
             token = authorization.split(' ')[1]; 
             const userId = jsonwebtoken.verify(token, process.env.SECRET_KEY);
-            // console.log(userId['userID']);
             req.user = await User.findById(userId['userID']).select('-password');
-            console.log(await User.findById(userId['userID']).select('-password')); 
             next(); 
         }catch(err){
             res.status(403).send({"status":"failed","message":"Unauthorized sender"}); 

@@ -101,7 +101,6 @@ class UserContoller {
     }
     static changePassword = async (req,res) => {
         const {password ,cpassword }= req.body ;
-        // const user =req.user ; 
         if (password && cpassword){
             if(password === cpassword){
                 const salt = await bcrypt.genSalt(10); 
@@ -115,7 +114,6 @@ class UserContoller {
         }else {
             res.send({"status":"failed",message:"All fields are required"})
         } 
-        
     }
     static getProfile = async (req,res)=>{
         const id   = req.user._id;
