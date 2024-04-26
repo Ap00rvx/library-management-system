@@ -117,6 +117,17 @@ class UserContoller {
         } 
         
     }
+    static getProfile = async (req,res)=>{
+        const id   = req.user._id;
+        if (id)
+        {
+            const user  = await User.findById(id);
+            res.send({status:"success","user":user});  
+        } 
+        else{
+            res.seng({"status":"failed","message":"User not logged in"});
+        }
+    }
     static faculties = async (req,res) => {
         const faculty = await User.find({role:'faculty'}); 
         res.send({"status":"success","faculty":faculty});
